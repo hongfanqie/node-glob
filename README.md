@@ -8,6 +8,12 @@
 
 ## 用法
 
+用 npm 安装：
+
+```
+npm i glob
+```
+
 ```javascript
 var glob = require("glob")
 
@@ -52,10 +58,6 @@ glob("**/*.js", options, function (er, files) {
 ### 匹配基本名
 
 如果设置选项 `matchBase:true`，并且模式不包含斜杠，那么将搜索目录树下任意地方的匹配基本名（basename）的文件。例如 `*.js` 匹配 `test/simple/basic.js`。
-
-### 排除
-
-排除（negation）的作用是，以 `!` 开始的模式匹配所有不匹配模式的文件。但是，实现得比较怪。现在应避免使用。v5 已废弃，v6 将移除。
 
 ### 空集
 
@@ -184,8 +186,7 @@ var mg = new Glob(pattern, options, cb)
 * `ignore` 添加一个模式或一个 glob 模式数组，用来排除匹配。注意：`ignore` 模式**始终**认为 `dot:true`，不管其它的配置是怎样的。
 * `follow` 在展开 `**` 时追踪符号链接目录。注意这可能导致大量重复的引用（循环链接）。
 * `realpath` 在所有的结果上调用 `fs.realpath`，在不能解析符号链接的情况下，返回匹配文件的全路径，不过它常常是一个损坏的符号链接。
-* `nonegate` 支持 `negate` （见下）。默认为 true。
-* `nocomment` 支持 `comment` （见下）。默认为 true。
+* `absolute` 设为 true 时始终得到匹配文件的绝对地址。不同于 `realpath`，这同时影响 `match` 事件的返回值。
 
 ## 与其它 fnmatch/glob 实现的比较
 
@@ -201,11 +202,11 @@ var mg = new Glob(pattern, options, cb)
 
 ### 注释与排除
 
-**注意**：v5 默认关闭注释与排除，可以设置选项 `nonegate:false` 或 `nocomment:false` 启用。v6 将完全移除。
+在之前的版本中，如果模式以 `#` 开始则它是一个注释。标记为注释。如果模式以 `!` 开始则它是一个排除模式。
 
-排除的作用是，以 `!` 开始的模式匹配所有不匹配模式的文件。但是实现得比较怪。更好的方式是使用选项 `ignore`。如果你想匹配除 x 之外的所有的文件，那么使用 `**`，再设置选项 `ignore` 忽略 x。
+v5 已经废弃了选项 `nonegate` 和 `nocomment`。v6 则删除了这两个选项。
 
-注释功能由 minimatch 添加，主要是为了更容易地支持一些情况，比如 ignore 文件，以 `#` 开始的行让模式为“空”。不过，对于文件系统，注释没有意义。
+如果想排除某些文件，可以使用选项 `ignore` 。
 
 ## Windows
 
